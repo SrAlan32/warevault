@@ -1,0 +1,19 @@
+node_modules/
+dist/
+*.log
+
+# Base de datos
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Evidencias de pruebas
+tests/evidencias/*.png
+tests/evidencias/reporte_test.html
+
+# Python
+__pycache__/
+.pytest_cache/
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMIN
+  ALMACENERO
+}
+
+enum TipoMovimiento {
+  ENTRADA
+  SALIDA
+}
+
+model Usuario {
+  id          Int           @id @default(autoincrement())
+  nombre      String
+  email       String        @unique
+  password    String
+  rol         Rol           @default(ALMACENERO)
+  activo      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  movimientos Movimiento[]
+}
+
+model Categoria {
+  id        Int         @id @default(autoincrement())
+  nombre    String      @unique
+  productos Producto[]
+}
+
+model Producto {
+  id           Int          @id @default(autoincrement())
+  sku          String       @unique
+  nombre       String
+  descripcion  String?
+  precioCompra Float
+  precioVenta  Float
+  stockMinimo  Int          @default(0)
+  stockActual  Int          @default(0)
+  categoriaId  Int
+  categoria    Categoria    @relation(fields: [categoriaId], references: [id])
+  movimientos  Movimiento[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Movimiento {
+  id         Int           @id @default(autoincrement())
+  productoId Int
+  producto   Producto      @relation(fields: [productoId], references: [id])
+  tipo       TipoMovimiento
+  cantidad   Int
+  fecha      DateTime      @default(now())
+  usuarioId  Int
+  usuario    Usuario       @relation(fields: [usuarioId], references: [id])
+  nota       String?
+}
